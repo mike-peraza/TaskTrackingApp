@@ -5,7 +5,8 @@ import { useTasks } from "../../../lib/hooks";
 import { addTask } from "../../../lib/api";
 
 export default function TaskList() {
-  const { data: tasks, isLoading, error: tasksError, refetch } = useTasks();
+  const queryResult = useTasks();
+  const { data: tasks, isLoading, error: tasksError, refetch } = queryResult;
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [loading, setLoading] = useState(false);

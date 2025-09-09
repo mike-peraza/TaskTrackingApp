@@ -19,7 +19,7 @@ export async function addTask(task: { title: string; description?: string }): Pr
   return res.json();
 }
 
-export async function updateTask(id: number, updates: { completed?: boolean; title?: string }): Promise<Task> {
+export async function updateTask(id: number, updates: { completed?: boolean; title?: string; description?: string }): Promise<Task> {
   const res = await fetch(`${API_URL}/todos/${id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
