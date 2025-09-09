@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { Task } from "../../../lib/schemas";
-import { updateTask, deleteTask } from "../../../lib/api";
+import { updateTask, deleteTask, toggleTaskComplete } from "../../../lib/api";
 
 export default function TaskItem({ task }: { task: Task }) {
   const [isEditing, setIsEditing] = useState(false);
@@ -15,12 +15,8 @@ export default function TaskItem({ task }: { task: Task }) {
     setLoading(true);
     setError("");
     try {
-      await updateTask(task.id, {
-        title: task.title,
-        description: task.description ?? undefined,
-        completed: true
-      });
-      setCompleted(true);
+      const updated = await toggleTaskComplete(task.id);
+      setCompleted(updated.completed);
       setShowCompleteConfirm(false);
     } catch (err) {
       setError("Failed to mark as complete");

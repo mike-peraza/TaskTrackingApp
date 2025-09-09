@@ -1,3 +1,11 @@
+export async function toggleTaskComplete(id: number): Promise<Task> {
+  const res = await fetch(`${API_URL}/todos/${id}/toggle`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+  });
+  if (!res.ok) throw new Error("Failed to toggle task completion");
+  return await res.json();
+}
 import { TaskSchema, Task } from "./schemas";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
