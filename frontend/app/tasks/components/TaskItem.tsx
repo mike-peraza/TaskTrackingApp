@@ -7,8 +7,27 @@ export default function TaskItem({ task }: { task: Task }) {
   const [editTitle, setEditTitle] = useState(task.title);
   const [editDescription, setEditDescription] = useState(task.description || "");
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showCompleteConfirm, setShowCompleteConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [completed, setCompleted] = useState(task.completed);
+  const handleMarkComplete = async () => {
+    setLoading(true);
+    setError("");
+    try {
+      await updateTask(task.id, {
+        title: task.title,
+        description: task.description ?? undefined,
+        completed: true
+      });
+      setCompleted(true);
+      setShowCompleteConfirm(false);
+    } catch (err) {
+      setError("Failed to mark as complete");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -75,7 +94,17 @@ export default function TaskItem({ task }: { task: Task }) {
         <>
           <span>{task.title}</span>
           {task.description && <span style={{ color: '#888', fontSize: '0.9em' }}>({task.description})</span>}
-          <span>{task.completed ? "✅" : "❌"}</span>
+          <span
+            style={{ cursor: completed ? 'default' : 'pointer', fontSize: '1.2em' }}
+            title={completed ? "Completed" : "Mark as complete"}
+            onClick={() => {
+              if (!completed) setShowCompleteConfirm(true);
+            }}
+            role="button"
+            aria-label={completed ? "Completed" : "Mark as complete"}
+          >
+            {completed ? "✅" : "❌"}
+          </span>
           <button
             onClick={handleEdit}
             title="Edit"
@@ -88,9 +117,19 @@ export default function TaskItem({ task }: { task: Task }) {
             title="Delete"
             style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'red', fontWeight: 'bold' }}
           >
-            <span role="img" aria-label="delete">❌</span>
+              <span role="img" aria-label="delete">
+                {/* Trash icon SVG */}
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m5 0V4a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+              </span>
           </button>
         </>
+      )}
+      {showCompleteConfirm && (
+        <div style={{ position: 'absolute', background: '#fff', border: '1px solid #ccc', padding: '1rem', zIndex: 10 }}>
+          <div>Mark this task as complete?</div>
+          <button onClick={handleMarkComplete} disabled={loading} style={{ color: 'green', marginRight: '0.5rem' }}>Yes, complete</button>
+          <button onClick={() => setShowCompleteConfirm(false)} disabled={loading}>Cancel</button>
+        </div>
       )}
       {showConfirm && (
         <div style={{ position: 'absolute', background: '#fff', border: '1px solid #ccc', padding: '1rem', zIndex: 10 }}>
