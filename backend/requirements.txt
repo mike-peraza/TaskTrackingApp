@@ -1,0 +1,6 @@
+fastapi
+pydantic
+sqlalchemy
+asyncpg>=0.29.0
+alembic
+uvicorn
