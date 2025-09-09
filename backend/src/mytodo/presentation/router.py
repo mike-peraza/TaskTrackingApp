@@ -18,7 +18,7 @@ async def create_todo(data: TodoCreate, session: AsyncSession = Depends(get_sess
 async def list_todos(session: AsyncSession = Depends(get_session)):
     repo = SQLTodoRepository(session)
     todos = await repo.list()
-    return todos
+    return [TodoOut.from_orm(todo) for todo in todos]
 
 @router.get("/todos/{todo_id}", response_model=TodoOut)
 async def get_todo(todo_id: int, session: AsyncSession = Depends(get_session)):

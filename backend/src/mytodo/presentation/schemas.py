@@ -1,5 +1,5 @@
 from typing import Optional
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 class TodoCreate(BaseModel):
     title: str
@@ -14,3 +14,4 @@ class TodoOut(BaseModel):
     title: str
     description: Optional[str] = None
     completed: bool
+    model_config = ConfigDict(from_attributes=True)

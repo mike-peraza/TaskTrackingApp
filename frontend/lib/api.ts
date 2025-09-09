@@ -3,7 +3,7 @@ import { TaskSchema, Task } from "./schemas";
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
 
 export async function fetchTasks(): Promise<Task[]> {
-  const res = await fetch(`${API_URL}/tasks`);
+  const res = await fetch(`${API_URL}/todos`);
   if (!res.ok) throw new Error("Failed to fetch tasks");
   const data = await res.json();
   return TaskSchema.array().parse(data);

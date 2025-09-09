@@ -20,17 +20,21 @@ class SQLTodoRepository:
         return todo
 
     async def list(self) -> List[Todo]:
-        result = await self.session.execute(text("SELECT * FROM todos"))
+        from sqlalchemy import select
+        result = await self.session.execute(select(Todo))
         return result.scalars().all()
 
     async def get(self, todo_id: int) -> Optional[Todo]:
-        return await self.session.get(Todo, todo_id)
+        from sqlalchemy import select
+        result = await self.session.execute(select(Todo).where(Todo.id == todo_id))
+        return result.scalars().first()
 
     async def update(self, todo_id: int, title: str, description: Optional[str]) -> Optional[Todo]:
         todo = await self.get(todo_id)
         if todo:
             todo.title = title
             todo.description = description
+            self.session.add(todo)
             await self.session.commit()
             await self.session.refresh(todo)
         return todo
@@ -39,6 +43,7 @@ class SQLTodoRepository:
         todo = await self.get(todo_id)
         if todo:
             todo.completed = not todo.completed
+            self.session.add(todo)
             await self.session.commit()
             await self.session.refresh(todo)
         return todo
