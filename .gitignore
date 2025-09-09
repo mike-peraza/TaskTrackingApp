@@ -42,4 +42,4 @@ alembic/
 
 # Build
 build/
-dist/
+dist/node_modules/
