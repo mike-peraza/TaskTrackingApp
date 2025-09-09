@@ -43,3 +43,4 @@ alembic/
 # Build
 build/
 dist/node_modules/
+node_modules/
