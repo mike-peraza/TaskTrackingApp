@@ -1,0 +1,11 @@
+[project]
+name = "mytodo"
+version = "0.1.0"
+description = "A FastAPI to-do list app (in-memory, clean architecture)"
+authors = ["Your Name <your@email.com>"]
+
+[tool.pyright]
+typeCheckingMode = "strict"
+
+[tool.ruff]
+line-length = 88
